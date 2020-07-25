@@ -22,8 +22,36 @@ var GetNavDateAsync = async function GetNavDateAsync(schemeCode){
     })
 }
 
-var PrintResponse = async function PrintResponseAsync(){
-    var x = await GetNavDateAsync(118672);
+var PrintResponse = async function PrintResponseAsync(schemeCode){
+    var x = await GetNavDateAsync(schemeCode);
     console.log(x);
 }
-PrintResponse();
+
+var GetNavByDate = async function GetNavByDateAsync(schemeCode, date){
+    if (ValidateDateFormat(date))
+    {
+        var NavAndDate = await GetNavDateAsync(schemeCode);
+        var i  = 0;
+        while(i < 5){
+            if(NavAndDate[date]){
+                return NavAndDate[date];
+            }
+            i = i + 1;
+            console.log("No NAV found for schemecode ", schemeCode, " on date ", date);
+            return 0;
+        }
+    }
+    else{
+        console.error("Incorrect Date Format");
+    }
+}
+
+var ValidateDateFormat = function(datestr){
+    return Date.parse(datestr) != NaN;
+}
+
+var runTest = async (schemeCode, datestring) => {
+    nav = await GetNavByDate(schemeCode, datestring);
+    console.log("nav is ", nav);
+}
+runTest(118672, '24-01-2013');
