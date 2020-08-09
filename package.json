@@ -1,0 +1,31 @@
+{
+  "name": "mfreturns",
+  "version": "1.0.0",
+  "description": "Package to calculate the returns on Mutual Funds",
+  "main": "Index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anubhavpkumar/MutualFundsReturnsCalculator.git"
+  },
+  "keywords": [
+    "Mutual",
+    "Funds",
+    "returns",
+    "calculator",
+    "stock",
+    "market",
+    "nav",
+    "price"
+  ],
+  "author": "Anubhav Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anubhavpkumar/MutualFundsReturnsCalculator/issues"
+  },
+  "homepage": "https://github.com/anubhavpkumar/MutualFundsReturnsCalculator#readme"
+}
