@@ -1,4 +1,5 @@
 const request = require('request');
+const dtUtils = require('@anubhav.p.kumar/datetimeutil');
 
 var GetNavDateAsync = async function GetNavDateAsync(schemeCode){
     return new Promise((resolve, reject) => {
@@ -8,7 +9,6 @@ var GetNavDateAsync = async function GetNavDateAsync(schemeCode){
             {
                 body = JSON.parse(body);
                 var NavDate = {};
-                //console.log(body.data);
                 body.data.forEach((item,index) => {
                     NavDate[item.date] = item.nav;
                 });
@@ -22,36 +22,33 @@ var GetNavDateAsync = async function GetNavDateAsync(schemeCode){
     })
 }
 
-var PrintResponse = async function PrintResponseAsync(schemeCode){
-    var x = await GetNavDateAsync(schemeCode);
-    console.log(x);
+var CorrectDateString = (dtstring) => {
+    dateSplit = dtstring.split("-");
+    dateSplit = dateSplit.map((item) => {
+        if (item.length == 1){
+            item = "0" + item;
+        }
+        return item
+    });
+    return dateSplit.join("-");
 }
 
 var GetNavByDate = async function GetNavByDateAsync(schemeCode, date){
-    if (ValidateDateFormat(date))
-    {
-        var NavAndDate = await GetNavDateAsync(schemeCode);
-        var i  = 0;
-        while(i < 5){
-            if(NavAndDate[date]){
-                return NavAndDate[date];
-            }
-            i = i + 1;
-            console.log("No NAV found for schemecode ", schemeCode, " on date ", date);
-            return 0;
+    var NavAndDate = await GetNavDateAsync(schemeCode);
+    var dateObject = new dtUtils(date);
+    var i  = 0;
+    while(i < 5){
+        var dateString = CorrectDateString(dateObject.GetNewDate());
+        if(NavAndDate[dateString]){
+            return NavAndDate[dateString];
         }
+        i = i + 1;
+        date = await dateObject.AddDaysToDate(1);
     }
-    else{
-        console.error("Incorrect Date Format");
-    }
+    return undefined;
 }
 
-var ValidateDateFormat = function(datestr){
-    return Date.parse(datestr) != NaN;
-}
 
-var runTest = async (schemeCode, datestring) => {
-    nav = await GetNavByDate(schemeCode, datestring);
-    console.log("nav is ", nav);
-}
-runTest(118672, '24-01-2013');
+
+module.exports.GetNavByDate = GetNavByDate;
+module.exports.CorrectDateString = CorrectDateString;
